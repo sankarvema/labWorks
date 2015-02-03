@@ -1,13 +1,22 @@
 package csc.atd.ilab.labWorks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import csc.atd.ilab.labWorks.core.SpeechPlayer;
 
 
 public class MainActivity extends Activity {
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +43,20 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClick (View view) {
+        Toast.makeText(this, "Button 1 pressed",
+                Toast.LENGTH_LONG).show();
+
+        TextView banner = (TextView) findViewById(R.id.text_banner);
+        banner.setText(R.string.tagline);
+
+        SpeechPlayer.getInstance(getApplicationContext()).play("Welcome to CSC TechLabs");
+
+        Intent intent = new Intent(this, PosterScanOcrActivity.class);
+        startActivity(intent);
+
+
     }
 }
