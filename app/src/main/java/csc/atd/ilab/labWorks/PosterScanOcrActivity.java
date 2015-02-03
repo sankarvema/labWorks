@@ -2,6 +2,8 @@ package csc.atd.ilab.labWorks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import csc.atd.ilab.labWorks.core.Params;
+import csc.atd.ilab.labWorks.image.OcrController;
 import csc.atd.ilab.labWorks.image.Preview;
 
 public class PosterScanOcrActivity extends Activity {
@@ -150,6 +153,13 @@ public class PosterScanOcrActivity extends Activity {
 
                 Log.d(Params.App_Tag, "onPictureTaken - wrote bytes: " + data.length + " to " + outFile.getAbsolutePath());
 
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 6;
+
+                Bitmap bitmap = BitmapFactory.decodeFile(outFile.getAbsolutePath(), options);
+                String text = OcrController.getInstance().scanImage(bitmap);
+                Log.d(Params.App_Tag, "Scanned text: " + text);
+
                 //ImageProc.convertToGrayScale(outFile.getAbsolutePath());
 
                 //refreshGallery(outFile);
@@ -157,7 +167,11 @@ public class PosterScanOcrActivity extends Activity {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally {
             }
             return null;
         }
