@@ -1,11 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="2" >
-
-    <dataSet config="main" >
-        <source path="D:\wspace\github\labWorks\libraries\opencv\src\main\assets" />
-    </dataSet>
-    <dataSet config="debug" >
-        <source path="D:\wspace\github\labWorks\libraries\opencv\src\debug\assets" />
-    </dataSet>
-
-</merger>
+<merger version="3"><dataSet config="main"><source path="C:\wspace\github\labWorks\libraries\opencv\src\main\assets"/></dataSet><dataSet config="debug"><source path="C:\wspace\github\labWorks\libraries\opencv\src\debug\assets"/></dataSet></merger>

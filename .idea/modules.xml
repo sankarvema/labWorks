@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LabWorks.iml" filepath="$PROJECT_DIR$/LabWorks.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/labWorks.iml" filepath="$PROJECT_DIR$/labWorks.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/opencv/opencv.iml" filepath="$PROJECT_DIR$/libraries/opencv/opencv.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/tess-two/tess-two.iml" filepath="$PROJECT_DIR$/libraries/tess-two/tess-two.iml" />
     </modules>
