@@ -18,6 +18,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -52,7 +56,22 @@ public class PosterScanOcrActivity extends Activity {
 
         Toast.makeText(getApplicationContext(), getString(R.string.take_photo_help), Toast.LENGTH_LONG).show();
     }
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i(Params.App_Tag, "OpenCV hah hah loaded successfully");
 
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,6 +95,8 @@ public class PosterScanOcrActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        super.onResume();
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, mLoaderCallback);
         int numCams = Camera.getNumberOfCameras();
         if(numCams > 0){
             try{
@@ -160,7 +181,6 @@ public class PosterScanOcrActivity extends Activity {
                 String text = OcrController.getInstance().scanImage(bitmap);
                 Log.d(Params.App_Tag, "Scanned text: " + text);
 
-                //ImageProc.convertToGrayScale(outFile.getAbsolutePath());
 
                 //refreshGallery(outFile);
             } catch (FileNotFoundException e) {

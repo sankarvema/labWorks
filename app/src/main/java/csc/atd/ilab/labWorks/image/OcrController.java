@@ -26,9 +26,7 @@ public class OcrController {
 
     private void initialize()
     {
-        /*if (!(new File(Params.App_Folder_TessData + "\\" + Params.Ocr_Lang + ".traineddata")).exists()) {
-            FileController.copyFile()
-        }*/
+
 
         //ToDo :: Try finding Ocr Data or else throw error
         // hardcoded for time being
@@ -40,16 +38,7 @@ public class OcrController {
         TessBaseAPI baseApi = new TessBaseAPI();
         baseApi.setDebug(true);
         baseApi.init(dataPath, Params.Ocr_Lang);
-		/* Mat tmp = new Mat(bitmap.getWidth(), bitmap.getHeight(), 5 );
-        Utils.bitmapToMat(bitmap, tmp);
-         Mat gray = new Mat(bitmap.getWidth(), bitmap.getHeight(),4);
-		 Mat mIntermediateMat = new Mat(bitmap.getWidth(), bitmap.getHeight(), CvType.CV_8UC1);
-		Mat mRgba = new Mat(bitmap.getWidth(), bitmap.getHeight(), CvType.CV_8UC1);
-        Imgproc.cvtColor(tmp, gray, Imgproc.COLOR_RGB2GRAY);
-		Imgproc.Canny(gray, mIntermediateMat, 35, 75);
-		 Imgproc.GaussianBlur(gray, gray, new Size(5, 5), 2, 2);
-		Imgproc.cvtColor(mIntermediateMat, mRgba, Imgproc.COLOR_GRAY2BGRA, 4);
-         Utils.matToBitmap(gray, bitmap);*/
+
         bitmap= ImageProc.convertToGrayScale(bitmap);
         baseApi.setImage(bitmap);
 
