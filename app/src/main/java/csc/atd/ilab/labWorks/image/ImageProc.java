@@ -3,21 +3,25 @@ package csc.atd.ilab.labWorks.image;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-
+import android.util.Log;
 import csc.atd.ilab.labWorks.store.FileController;
 
 
 public class ImageProc {
 
-    public static void convertToGrayScale(String path)
+
+    public static Bitmap convertToGrayScale(Bitmap photoBitmap)
     {
 
-        Bitmap photoBitmap = BitmapFactory.decodeFile(path);
+
         Mat tmpMat = new Mat (photoBitmap.getWidth(), photoBitmap.getHeight(), CvType.CV_8UC1);
         Utils.bitmapToMat(photoBitmap, tmpMat);
         //Mat imgToProcess=Utils.bitmapToMat(photoBitmap);
@@ -31,10 +35,10 @@ public class ImageProc {
         Utils.matToBitmap(tmpMat, photoBitmap);
 
         FileController.saveBitmap(photoBitmap);
-
+        return photoBitmap;
     }
 
-    public static Bitmap convertToGrayScale(Bitmap src)
+   /* public static Bitmap convertToGrayScale(Bitmap src)
     {
         // constant factors
         final double GS_RED = 0.299;
@@ -70,7 +74,7 @@ public class ImageProc {
 
         // return final image
         return bmOut;
-    }
+    }*/
 
 
 }
