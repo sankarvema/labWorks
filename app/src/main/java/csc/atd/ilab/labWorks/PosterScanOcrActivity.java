@@ -62,7 +62,7 @@ public class PosterScanOcrActivity extends Activity {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                 {
-                    Log.i("help", "OpenCV hah hah loaded successfully");
+                    Log.i(Params.App_Tag, "OpenCV hah hah loaded successfully");
 
                 } break;
                 default:
@@ -181,7 +181,6 @@ public class PosterScanOcrActivity extends Activity {
                 String text = OcrController.getInstance().scanImage(bitmap);
                 Log.d(Params.App_Tag, "Scanned text: " + text);
 
-                //ImageProc.convertToGrayScale(outFile.getAbsolutePath());
 
                 //refreshGallery(outFile);
             } catch (FileNotFoundException e) {
