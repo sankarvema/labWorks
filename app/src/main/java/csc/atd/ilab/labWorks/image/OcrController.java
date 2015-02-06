@@ -26,11 +26,13 @@ public class OcrController {
 
     private void initialize()
     {
-
+        /*if (!(new File(Params.App_Folder_TessData + "\\" + Params.Ocr_Lang + ".traineddata")).exists()) {
+            FileController.copyFile()
+        }*/
 
         //ToDo :: Try finding Ocr Data or else throw error
         // hardcoded for time being
-        dataPath = Params.App_Folder_TessData + "\\" + Params.Ocr_Lang + ".traineddata";
+        dataPath = Params.App_Folder_Root ;
     }
 
     public String scanImage(Bitmap bitmap)
@@ -38,8 +40,8 @@ public class OcrController {
         TessBaseAPI baseApi = new TessBaseAPI();
         baseApi.setDebug(true);
         baseApi.init(dataPath, Params.Ocr_Lang);
-
-        bitmap= ImageProc.convertToGrayScale(bitmap);
+        bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        bitmap =ImageProc.convertToGrayScale(bitmap);
         baseApi.setImage(bitmap);
 
         String recognizedText = baseApi.getUTF8Text();

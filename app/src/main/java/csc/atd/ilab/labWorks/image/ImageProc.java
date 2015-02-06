@@ -22,7 +22,7 @@ public class ImageProc {
 
         Imgproc.cvtColor(tmpMat, tmpMat, Imgproc.COLOR_RGB2GRAY);
 
-        Imgproc.cvtColor(tmpMat, tmpMat, Imgproc.COLOR_GRAY2RGB, 4);
+
         Utils.matToBitmap(tmpMat, photoBitmap);
 
         FileController.saveBitmap(photoBitmap);
