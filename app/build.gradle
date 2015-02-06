@@ -19,8 +19,16 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'aars'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':libraries:opencv')
     compile project(':libraries:tess-two')
+    compile(name:'android-beacon-library-2.1.2', ext:'aar')
 }

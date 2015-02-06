@@ -3,25 +3,57 @@ package csc.atd.ilab.labWorks;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+
+import java.util.Collection;
+
 import csc.atd.ilab.labWorks.core.SpeechPlayer;
 
+public class MainActivity extends Activity implements BeaconConsumer {
 
-public class MainActivity extends Activity {
+    private BeaconManager beaconManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         ImageView image = (ImageView) findViewById(R.id.img_banner);
+
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+        //beaconController.verifyBeacon();
+        beaconManager.bind(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(false);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,5 +87,24 @@ public class MainActivity extends Activity {
         startActivity(intent);
 
 
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                if (beacons.size() > 0) {
+                    EditText editText = (EditText) findViewById(R.id.rangingText);
+                    Beacon firstBeacon = beacons.iterator().next();
+                    //logToDisplay("The first beacon "+firstBeacon.toString()+" is about "+firstBeacon.getDistance()+" meters away.");
+                }
+            }
+
+        });
+
+        try {
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+        } catch (RemoteException e) {   }
     }
 }
