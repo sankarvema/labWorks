@@ -178,9 +178,11 @@ public class PosterScanOcrActivity extends Activity {
                 options.inSampleSize = 6;
 
                 Bitmap bitmap = BitmapFactory.decodeFile(outFile.getAbsolutePath(), options);
-                String text = OcrController.getInstance().scanImage(bitmap);
+                String text;
+                text = OcrController.getInstance().scanImage(bitmap);
                 Log.d(Params.App_Tag, "Scanned text: " + text);
 
+                //ImageProc.convertToGrayScale(outFile.getAbsolutePath());
 
                 //refreshGallery(outFile);
             } catch (FileNotFoundException e) {
