@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import csc.atd.ilab.labWorks.core.SpeechPlayer;
 
-public class MainActivity extends Activity implements BeaconConsumer {
+public class MainActivity extends Activity implements BeaconConsumer, RangeNotifier {
 
     private BeaconManager beaconManager = null;
 
@@ -97,6 +97,7 @@ public class MainActivity extends Activity implements BeaconConsumer {
                 if (beacons.size() > 0) {
                     EditText editText = (EditText) findViewById(R.id.rangingText);
                     Beacon firstBeacon = beacons.iterator().next();
+                    editText.setText(Double.toString(firstBeacon.getDistance()));
                     //logToDisplay("The first beacon "+firstBeacon.toString()+" is about "+firstBeacon.getDistance()+" meters away.");
                 }
             }
@@ -107,4 +108,19 @@ public class MainActivity extends Activity implements BeaconConsumer {
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
         } catch (RemoteException e) {   }
     }
+
+    ///region - implementation of rangeNotifier interfaces
+    @Override
+    public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+        if (beacons.size() > 0) {
+            EditText editText = (EditText) findViewById(R.id.rangingText);
+            Beacon firstBeacon = beacons.iterator().next();
+            editText.setText(Double.toString(firstBeacon.getDistance()));
+            //logToDisplay("The first beacon "+firstBeacon.toString()+" is about "+firstBeacon.getDistance()+" meters away.");
+        }
+
+    }
+
+    ///endregion
+
 }
