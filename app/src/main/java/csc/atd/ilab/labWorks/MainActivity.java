@@ -35,6 +35,9 @@ public class MainActivity extends Activity implements BeaconConsumer, RangeNotif
         beaconManager = BeaconManager.getInstanceForApplication(this);
         //beaconController.verifyBeacon();
         beaconManager.bind(this);
+
+        EditText editText = (EditText) findViewById(R.id.rangingText);
+        editText.setText("Hai there");
     }
 
     @Override
@@ -95,10 +98,11 @@ public class MainActivity extends Activity implements BeaconConsumer, RangeNotif
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 if (beacons.size() > 0) {
-                    EditText editText = (EditText) findViewById(R.id.rangingText);
+
                     Beacon firstBeacon = beacons.iterator().next();
-                    editText.setText(Double.toString(firstBeacon.getDistance()));
-                    //logToDisplay("The first beacon "+firstBeacon.toString()+" is about "+firstBeacon.getDistance()+" meters away.");
+
+                   // editText.setText(Double.toString(firstBeacon.getDistance()));
+                    logToDisplay(firstBeacon.toString(), Double.toString(firstBeacon.getDistance()));
                 }
             }
 
@@ -120,7 +124,18 @@ public class MainActivity extends Activity implements BeaconConsumer, RangeNotif
         }
 
     }
-
     ///endregion
 
+    private void logToDisplay(final String id, final String distance) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                EditText editText1 = (EditText)  findViewById(R.id.beaconId);
+                editText1.setText(id);
+
+                EditText editText = (EditText)  findViewById(R.id.rangingText);
+                editText.setText(distance);
+                //editText.append(line+"\n");
+            }
+        });
+    }
 }
