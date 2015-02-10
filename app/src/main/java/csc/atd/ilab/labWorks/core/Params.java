@@ -13,4 +13,5 @@ public class Params
 
     public static final String App_Tag ="LabWorks";
     public static final String Ocr_Lang = "eng";
+    public static final double Beacon_Proximity_Zone = 0.5;
 }

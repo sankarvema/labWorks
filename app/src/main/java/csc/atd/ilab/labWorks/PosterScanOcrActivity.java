@@ -56,6 +56,7 @@ public class PosterScanOcrActivity extends Activity {
 
         Toast.makeText(getApplicationContext(), getString(R.string.take_photo_help), Toast.LENGTH_LONG).show();
     }
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -119,7 +120,6 @@ public class PosterScanOcrActivity extends Activity {
         }
         super.onPause();
     }
-
 
     Camera.ShutterCallback shutterCallback = new Camera.ShutterCallback() {
         public void onShutter() {
@@ -187,16 +187,14 @@ public class PosterScanOcrActivity extends Activity {
                 //refreshGallery(outFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
+            } catch (IOException e){
                 e.printStackTrace();
-            } catch (Exception e)
-            {
+            } catch (Exception e){
                 e.printStackTrace();
             }
             finally {
             }
             return null;
         }
-
     }
 }

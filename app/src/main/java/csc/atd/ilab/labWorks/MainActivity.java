@@ -20,11 +20,13 @@ import org.altbeacon.beacon.Region;
 
 import java.util.Collection;
 
+import csc.atd.ilab.labWorks.core.Params;
 import csc.atd.ilab.labWorks.core.SpeechPlayer;
 
-public class MainActivity extends Activity implements BeaconConsumer, RangeNotifier {
+public class MainActivity extends Activity implements BeaconConsumer {
 
     private BeaconManager beaconManager = null;
+    Intent posterIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,8 @@ public class MainActivity extends Activity implements BeaconConsumer, RangeNotif
         beaconManager = BeaconManager.getInstanceForApplication(this);
         //beaconController.verifyBeacon();
         beaconManager.bind(this);
+
+        posterIntent = new Intent(this, PosterScanOcrActivity.class);
 
         EditText editText = (EditText) findViewById(R.id.rangingText);
         editText.setText("Hai there");
@@ -78,18 +82,7 @@ public class MainActivity extends Activity implements BeaconConsumer, RangeNotif
     }
 
     public void onClick (View view) {
-        Toast.makeText(this, "Button 1 pressed",
-                Toast.LENGTH_LONG).show();
-
-        TextView banner = (TextView) findViewById(R.id.text_banner);
-        banner.setText(R.string.tagline);
-
-        SpeechPlayer.getInstance(getApplicationContext()).play("Welcome to CSC TechLabs");
-
-        Intent intent = new Intent(this, PosterScanOcrActivity.class);
-        startActivity(intent);
-
-
+        initWelcomeFunc();
     }
 
     @Override
@@ -98,11 +91,13 @@ public class MainActivity extends Activity implements BeaconConsumer, RangeNotif
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 if (beacons.size() > 0) {
-
                     Beacon firstBeacon = beacons.iterator().next();
 
-                   // editText.setText(Double.toString(firstBeacon.getDistance()));
-                    logToDisplay(firstBeacon.toString(), Double.toString(firstBeacon.getDistance()));
+                    beaconDisplay(firstBeacon.toString(), Double.toString(firstBeacon.getDistance()));
+
+                    if(firstBeacon.getDistance() < Params.Beacon_Proximity_Zone)
+                        initWelcomeFunc();
+
                 }
             }
 
@@ -113,28 +108,21 @@ public class MainActivity extends Activity implements BeaconConsumer, RangeNotif
         } catch (RemoteException e) {   }
     }
 
-    ///region - implementation of rangeNotifier interfaces
-    @Override
-    public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-        if (beacons.size() > 0) {
-            EditText editText = (EditText) findViewById(R.id.rangingText);
-            Beacon firstBeacon = beacons.iterator().next();
-            editText.setText(Double.toString(firstBeacon.getDistance()));
-            //logToDisplay("The first beacon "+firstBeacon.toString()+" is about "+firstBeacon.getDistance()+" meters away.");
-        }
-
-    }
-    ///endregion
-
-    private void logToDisplay(final String id, final String distance) {
+    private void beaconDisplay(final String id, final String distance) {
         runOnUiThread(new Runnable() {
             public void run() {
-                EditText editText1 = (EditText)  findViewById(R.id.beaconId);
-                editText1.setText(id);
-
                 EditText editText = (EditText)  findViewById(R.id.rangingText);
                 editText.setText(distance);
-                //editText.append(line+"\n");
+            }
+        });
+    }
+
+    private void initWelcomeFunc()
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                SpeechPlayer.getInstance(getApplicationContext()).play("Welcome to CSC TechLabs");
+                startActivity(posterIntent);
             }
         });
     }
