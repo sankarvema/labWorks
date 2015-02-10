@@ -3,25 +3,64 @@ package csc.atd.ilab.labWorks;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+
+import java.util.Collection;
+
+import csc.atd.ilab.labWorks.core.Params;
 import csc.atd.ilab.labWorks.core.SpeechPlayer;
 
+public class MainActivity extends Activity implements BeaconConsumer {
 
-public class MainActivity extends Activity {
+    private BeaconManager beaconManager = null;
+    Intent posterIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         ImageView image = (ImageView) findViewById(R.id.img_banner);
+
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+        //beaconController.verifyBeacon();
+        beaconManager.bind(this);
+
+        posterIntent = new Intent(this, PosterScanOcrActivity.class);
+
+        EditText editText = (EditText) findViewById(R.id.rangingText);
+        editText.setText("Hai there");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(false);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,17 +82,48 @@ public class MainActivity extends Activity {
     }
 
     public void onClick (View view) {
-        Toast.makeText(this, "Button 1 pressed",
-                Toast.LENGTH_LONG).show();
+        initWelcomeFunc();
+    }
 
-        TextView banner = (TextView) findViewById(R.id.text_banner);
-        banner.setText(R.string.tagline);
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                if (beacons.size() > 0) {
+                    Beacon firstBeacon = beacons.iterator().next();
 
-        SpeechPlayer.getInstance(getApplicationContext()).play("Welcome to CSC TechLabs");
+                    beaconDisplay(firstBeacon.toString(), Double.toString(firstBeacon.getDistance()));
 
-        Intent intent = new Intent(this, PosterScanOcrActivity.class);
-        startActivity(intent);
+                    if(firstBeacon.getDistance() < Params.Beacon_Proximity_Zone)
+                        initWelcomeFunc();
 
+                }
+            }
 
+        });
+
+        try {
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+        } catch (RemoteException e) {   }
+    }
+
+    private void beaconDisplay(final String id, final String distance) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                EditText editText = (EditText)  findViewById(R.id.rangingText);
+                editText.setText(distance);
+            }
+        });
+    }
+
+    private void initWelcomeFunc()
+    {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                SpeechPlayer.getInstance(getApplicationContext()).play("Welcome to CSC TechLabs");
+                startActivity(posterIntent);
+            }
+        });
     }
 }
